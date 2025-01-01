@@ -1,0 +1,103 @@
+/* Colors */
+:root {
+  --shadow-default: rgba(0, 0, 0, 0.4);
+  --shadow-light: rgba(0, 0, 0, 0.2);
+  --error: #b00020;
+  --secondary-dark: #808080;
+  --secondary-light: #d3d3d3;
+  --success: #2abd2a;
+}
+
+.main {
+  padding: 2rem;
+  margin: auto;
+}
+
+#metronome-section {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#tempo-section,
+#time-signature-section {
+  text-align: center;
+  max-width: fit-content;
+}
+
+#tempo-section-title,
+#time-signature-section-title {
+  margin: 0;
+  padding: 0;
+}
+
+#tempo-container,
+#time-signature-container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+#tempo-value,
+#time-signature-value {
+  font-weight: bold;
+  font-size: xxx-large;
+  text-align: center;
+}
+
+#time-signature-basic-beat {
+  font-weight: bold;
+  font-size: x-large;
+  color: var(--shadow-default);
+}
+
+#tempo-controls,
+#time-signature-controls {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.4rem;
+  & > button {
+    border: none;
+    font-weight: bold;
+    font-size: large;
+  }
+}
+
+#metronome-controls,
+#tempo-controls,
+#time-signature-controls {
+  & > button {
+    border: none;
+    border-radius: 0.4rem;
+    box-shadow: 0.2rem 0.2rem 0.2rem 0rem var(--shadow-default);
+    &:hover {
+      background-color: var(--secondary-dark);
+    }
+    &:active {
+      background-color: var(--secondary-dark);
+      background-color: #fff;
+    }
+    &:disabled {
+      color: var(--secondary-light);
+      &:hover {
+        background-color: unset;
+      }
+    }
+  }
+}
+
+#metronome-button-play-icon,
+#metronome-button-pause-icon {
+  &.hidden {
+    display: none;
+  }
+}
+
+#staff-container {
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
