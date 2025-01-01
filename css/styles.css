@@ -32,7 +32,11 @@
   padding: 0;
 }
 
-#tempo-container,
+#tempo-container {
+  display: flex;
+  flex-flow: column wrap;
+}
+
 #time-signature-container {
   display: flex;
   flex-flow: row nowrap;
@@ -54,7 +58,6 @@
   color: var(--shadow-default);
 }
 
-#tempo-controls,
 #time-signature-controls {
   display: flex;
   flex-flow: column nowrap;

@@ -1509,22 +1509,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"indentify-notes@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "indentify-notes@workspace:."
-  dependencies:
-    "@eslint/js": "npm:^9.17.0"
-    eslint: "npm:^9.17.0"
-    eslint-config-prettier: "npm:^9.1.0"
-    eslint-plugin-prettier: "npm:^5.2.1"
-    globals: "npm:^15.14.0"
-    prettier: "npm:3.4.2"
-    tsup: "npm:^8.3.5"
-    typescript: "npm:^5.7.2"
-    typescript-eslint: "npm:^8.19.0"
-  languageName: unknown
-  linkType: soft
-
 "ip-address@npm:^9.0.5":
   version: 9.0.5
   resolution: "ip-address@npm:9.0.5"
@@ -1733,6 +1717,22 @@ __metadata:
   checksum: 10c0/254a8a4605b58f450308fc474c82ac9a094848081bf4c06778200207820e5193726dc563a0d2c16468810516a5c97d9d3ea0ca6585d23c58ccfff2403e8dbbeb
   languageName: node
   linkType: hard
+
+"metronome-playalong@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "metronome-playalong@workspace:."
+  dependencies:
+    "@eslint/js": "npm:^9.17.0"
+    eslint: "npm:^9.17.0"
+    eslint-config-prettier: "npm:^9.1.0"
+    eslint-plugin-prettier: "npm:^5.2.1"
+    globals: "npm:^15.14.0"
+    prettier: "npm:3.4.2"
+    tsup: "npm:^8.3.5"
+    typescript: "npm:^5.7.2"
+    typescript-eslint: "npm:^8.19.0"
+  languageName: unknown
+  linkType: soft
 
 "micromatch@npm:^4.0.4":
   version: 4.0.8

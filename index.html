@@ -42,7 +42,15 @@
           <div id="tempo-container">
             <span id="tempo-value"></span>
             <div id="tempo-controls">
-              <button
+              <input
+                id="tempo-slider"
+                type="range"
+                id="tempo"
+                name="tempo"
+                min="1"
+                max="360"
+              />
+              <!-- <button
                 id="tempo-button-up"
                 class="metronome-controls tempo-button"
               >
@@ -53,7 +61,7 @@
                 class="metronome-controls tempo-button"
               >
                 -
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
@@ -100,28 +108,12 @@
                 id="time-signature-button-up"
                 class="metronome-controls time-signature-button"
               >
-                <!-- <svg
-                  id="tempo-button-up"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 50 50"
-                >
-                  <polygon points="25,10 10,40 40,40" fill="#000000" />
-                </svg> -->
                 +
               </button>
               <button
                 id="time-signature-button-down"
                 class="metronome-controls time-signature-button"
               >
-                <!-- <svg
-                  id="tempo-button-down"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 50 50"
-                >
-                  <polygon points="10,10 25,40 40,10" fill="#000000" />
-                </svg> -->
                 -
               </button>
             </div>
