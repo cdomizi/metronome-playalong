@@ -49,12 +49,12 @@ const tempoSlider = document.querySelector("#tempo-slider") as HTMLInputElement;
 tempoSlider.value = bpm.toString(); // Set default value
 bpmValue.textContent = tempoSlider.value; // Show default value in UI
 
-function handleTempoSliderChange(event: Event) {
-  const newTempoValue = (event.target as HTMLInputElement).value;
+function updateTempoSliderValue(newTempoValue: string) {
+  tempoSlider.value = newTempoValue; // Update slider value
+  bpmValue.textContent = tempoSlider.value; // Update BPM value in UI
 
   bpm = parseInt(newTempoValue); // Update BPM value
   ms = bpmToMs(bpm); // Update ms value
-  bpmValue.textContent = tempoSlider.value; // Update BPM value in UI
 
   // Notify metronome that the tempo has changed
   const tempoChangeEvent = new Event("tempoChange");
@@ -62,8 +62,65 @@ function handleTempoSliderChange(event: Event) {
   if (isMetronomePlaying) metronomeToggleButton.dispatchEvent(tempoChangeEvent);
 }
 
+function handleTempoSliderChange(event: Event) {
+  const newTempoValue = (event.target as HTMLInputElement).value;
+
+  updateTempoSliderValue(newTempoValue);
+}
+
 // Change BPM based on slider
 tempoSlider.addEventListener("change", handleTempoSliderChange);
+
+const tempoButtonUp = document.querySelector(
+  "#tempo-button-up",
+) as HTMLButtonElement;
+const tempoButtonDown = document.querySelector(
+  "#tempo-button-down",
+) as HTMLButtonElement;
+
+// Change the value in the slider on button press
+toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUp);
+toggleButtonDown(TEMPO_CONFIG.minBpm, bpm, tempoButtonDown);
+
+// Increment or decrement beats per measure via button
+function handleTempoButtonChange(event: Event) {
+  event.stopPropagation();
+
+  const isIncrement =
+    (event.target as HTMLButtonElement).id === "tempo-button-up";
+
+  // Enable/disable buttons based on current value + change
+  toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUp, isIncrement);
+  toggleButtonDown(TEMPO_CONFIG.minBpm, bpm, tempoButtonDown, !isIncrement);
+
+  // Update the value in the slider by dispatching change event
+  const tempoSliderEventType = isIncrement ? "increment" : "decrement";
+  const tempoChangeEvent = new Event(tempoSliderEventType);
+  tempoSlider.dispatchEvent(tempoChangeEvent);
+}
+
+// Adjust BPM via UI
+tempoButtonUp.addEventListener("click", handleTempoButtonChange);
+tempoButtonDown.addEventListener("click", handleTempoButtonChange);
+
+function handleTempoSliderButtonChange(event: Event) {
+  event.stopPropagation();
+
+  const isIncrement = event.type === "increment";
+
+  // Calculate new value from current value
+  const currentTempoValue = parseInt(tempoSlider.value);
+  // Increment/decrement current value based on button press +/-
+  const newTempoValue = isIncrement
+    ? currentTempoValue + 1
+    : currentTempoValue - 1;
+
+  updateTempoSliderValue(newTempoValue.toString());
+}
+
+// Change slider on button click
+tempoSlider.addEventListener("increment", handleTempoSliderButtonChange);
+tempoSlider.addEventListener("decrement", handleTempoSliderButtonChange);
 
 /* ======== Time Signature ======== */
 const TIME_SIGNATURE_CONFIG = {
