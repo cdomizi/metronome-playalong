@@ -46,7 +46,18 @@
                 id="tempo-button-down"
                 class="metronome-controls tempo-button"
               >
-                -
+                <svg
+                  id="tempo-button-down-icon"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="1rem"
+                  height="1rem"
+                  viewBox="-85.04 -85.54 970.08 970.08"
+                  xml:space="preserve"
+                >
+                  <rect x="-85.04" y="390" width="970.08" height="76.191" />
+                </svg>
               </button>
               <input
                 id="tempo-slider"
@@ -56,12 +67,25 @@
                 min="1"
                 max="360"
               />
-
               <button
                 id="tempo-button-up"
                 class="metronome-controls tempo-button"
               >
-                +
+                <svg
+                  id="tempo-button-up-icon"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  width="1rem"
+                  height="1.3rem"
+                  viewBox="-85.04 -150.54 970.08 970.08"
+                  xml:space="preserve"
+                >
+                  <polygon
+                    points="885.04,361.404 438.096,361.404 438.096,-85.54 361.904,-85.54 361.904,361.404 -85.04,361.404 -85.04,437.595 
+                  361.904,437.595 361.904,884.54 438.096,884.54 438.096,437.595 885.04,437.595 "
+                  />
+                </svg>
               </button>
             </div>
           </div>
@@ -70,7 +94,6 @@
           <button id="metronome-toggle-button">
             <svg
               id="metronome-button-play-icon"
-              fill="#000000"
               width="150"
               height="150"
               viewBox="-122 -114.7 393.26 393.26"
@@ -84,7 +107,6 @@
             <svg
               id="metronome-button-pause-icon"
               class="hidden"
-              fill="#000000"
               width="150"
               height="150"
               viewBox="-7.92 -7.92 39.84 39.84"

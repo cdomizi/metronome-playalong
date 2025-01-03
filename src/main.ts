@@ -84,10 +84,9 @@ toggleButtonDown(TEMPO_CONFIG.minBpm, bpm, tempoButtonDown);
 
 // Increment or decrement beats per measure via button
 function handleTempoButtonChange(event: Event) {
-  event.stopPropagation();
-
   const isIncrement =
-    (event.target as HTMLButtonElement).id === "tempo-button-up";
+    (event.target as HTMLButtonElement).id === "tempo-button-up" ||
+    (event.target as HTMLButtonElement).id === "tempo-button-up-icon";
 
   // Enable/disable buttons based on current value + change
   toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUp, isIncrement);

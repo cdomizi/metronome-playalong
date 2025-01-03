@@ -2,9 +2,10 @@
 :root {
   --shadow-default: rgba(0, 0, 0, 0.4);
   --shadow-light: rgba(0, 0, 0, 0.2);
-  --error: #b00020;
   --secondary-dark: #808080;
   --secondary-light: #d3d3d3;
+  --black: #434343;
+  --error: #b00020;
   --success: #2abd2a;
 }
 
@@ -72,8 +73,16 @@
 #tempo-controls {
   display: flex;
   flex-flow: row nowrap;
-  align-items: baseline;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.9rem;
+
+  & > button.tempo-button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+  }
 
   & > input[type="range"] {
     -webkit-appearance: none;
@@ -145,6 +154,7 @@ button {
 
 #metronome-button-play-icon,
 #metronome-button-pause-icon {
+  fill: var(--black);
   &.hidden {
     display: none;
   }
