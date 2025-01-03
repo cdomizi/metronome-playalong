@@ -2,6 +2,7 @@
   "name": "metronome-playalong",
   "version": "1.0.0",
   "main": "main.js",
+  "homepage": "https://cdomizi.github.io/metronome-playalong/",
   "type": "module",
   "packageManager": "yarn@4.6.0",
   "scripts": {
@@ -9,13 +10,17 @@
     "lint:ts": "yarn tsc --noEmit",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0 .",
     "dev": "tsup --watch --env.NODE_ENV development",
-    "start": "tsup --env.NODE_ENV production"
+    "start": "tsup --env.NODE_ENV production",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/gh-pages": "^6",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "gh-pages": "^6.3.0",
     "globals": "^15.14.0",
     "husky": "^8.0.0",
     "pinst": "^3.0.0",
