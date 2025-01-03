@@ -19,5 +19,5 @@ export async function changeNote() {
     return;
   }
 
-  await showNoteImg(randomSvg);
+  showNoteImg(randomSvg);
 }

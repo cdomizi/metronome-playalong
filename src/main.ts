@@ -4,7 +4,7 @@ import { showNoteImg } from "./showNoteImg.js";
 
 // Start with empty staff
 const epmtyStaffURL = "./static/images/empty-staff.svg";
-await showNoteImg(epmtyStaffURL);
+showNoteImg(epmtyStaffURL);
 
 // Toggle button utils
 function toggleDisableButton(disabled: boolean, button: HTMLButtonElement) {
@@ -203,6 +203,10 @@ const metronomeToggleButton = document.querySelector(
   "#metronome-toggle-button",
 ) as HTMLButtonElement;
 
+const staffContainer = document.querySelector(
+  "staff-container",
+) as HTMLDivElement;
+
 // Start/stop metronome on button click
 metronomeToggleButton.addEventListener("click", async () => {
   const metronomePlayButton = document.querySelector(
@@ -225,6 +229,9 @@ metronomeToggleButton.addEventListener("click", async () => {
     // Change button icon from ▶️ to ⏸️
     metronomePlayButton.setAttribute("class", "hidden");
     metronomePauseButton.setAttribute("class", "");
+
+    // Scroll to staff
+    staffContainer.scrollIntoView();
   }
 });
 
@@ -236,6 +243,9 @@ async function restartMetronome() {
 
     // Restart the metronome with the updated value for beatsPerMeasure
     isMetronomePlaying = await startMetronome(ms, beatsPerMeasure);
+
+    // Scroll to staff
+    staffContainer.scrollIntoView();
   }
 }
 
