@@ -2,7 +2,7 @@
 import { startMetronome } from "./metronome.js";
 import { showNoteImg } from "./showNoteImg.js";
 // Start with empty staff
-const epmtyStaffURL = "./public/static/images/empty-staff.svg";
+const epmtyStaffURL = "./public/images/empty-staff.svg";
 showNoteImg(epmtyStaffURL);
 // Toggle button utils
 function toggleDisableButton(disabled, button) {
