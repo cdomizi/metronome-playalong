@@ -1,6 +1,6 @@
 async function getImgPaths() {
     // Get content from the `images folder`
-    const response = await fetch("./static/images");
+    const response = await fetch("../static/images");
     const body = await response.text();
     // Parse content as HTML
     const parser = new DOMParser();
