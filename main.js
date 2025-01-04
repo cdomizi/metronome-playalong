@@ -1,2 +1,158 @@
-async function D(){let e=await(await fetch("./static/images")).text(),a=new DOMParser().parseFromString(e,"text/html").querySelectorAll("a");if(!a.length)throw Error("Document does not contain SVG element");return Array.from(a).map(d=>d.href).filter(d=>d.endsWith(".svg")&&!d.toLowerCase().includes("staff"))}async function T(){let t=await D(),e=Math.floor(Math.random()*t.length);return t[e]}var G=document.querySelector("img#note");function p(t){G.setAttribute("src",t);}var k=document.querySelector("#staff-container");async function y(){let t=await T();if(!t){console.error("Error: Could not get SVG file."),k.textContent="An error occurred: Cannot display a new note.";return}p(t);}async function E(t,e){let n=await L("../static/audio/metronome-high.mp3"),o=await L("../static/audio/metronome-low.mp3"),a=0;function b(){a%e===0?(n.currentTime=0,n.play(),y()):(o.currentTime=0,o.play()),a++,a>=e&&(a=0);}return setInterval(b,t)}function L(t){return new Promise((e,n)=>{let o=new Audio(t);o.addEventListener("canplaythrough",()=>{e(o);},!1),o.addEventListener("error",()=>{n(new Error("Failed to load audio: "+t));},!1),o.load();})}var U="./static/images/empty-staff.svg";p(U);function w(t,e){e.disabled=t;}function g(t,e,n,o){let a=(o??!0)&&e>=t-1;w(a,n);}function f(t,e,n,o){let a=(o??!0)&&e<=t+1;w(a,n);}var i={defaultTempo:90,minBpm:1,maxBpm:360},m=i.defaultTempo,C=document.querySelector("#tempo-value");function P(t){return 60*1e3/t}var h=P(m),u=document.querySelector("#tempo-slider");u.value=m.toString();C.textContent=u.value;function I(t){u.value=t,C.textContent=u.value,m=parseInt(t),h=P(m);let e=new Event("tempoChange");s&&l.dispatchEvent(e);}function F(t){let e=t.target.value;I(e);}u.addEventListener("change",F);var v=document.querySelector("#tempo-button-up"),S=document.querySelector("#tempo-button-down");g(i.maxBpm,m,v);f(i.minBpm,m,S);function H(t){let e=t.target.id==="tempo-button-up"||t.target.id==="tempo-button-up-icon";g(i.maxBpm,m,v,e),f(i.minBpm,m,S,!e);let n=e?"increment":"decrement",o=new Event(n);u.dispatchEvent(o);}v.addEventListener("click",H);S.addEventListener("click",H);function x(t){t.stopPropagation();let e=t.type==="increment",n=parseInt(u.value),o=e?n+1:n-1;I(o.toString());}u.addEventListener("increment",x);u.addEventListener("decrement",x);var c={defaultBeatsPerMeasure:4,minBeatsPerMeasure:1,maxBeatsPerMeasure:4},r=c.defaultBeatsPerMeasure,q=document.querySelector("#time-signature-value");q.textContent=r.toString();var B=document.querySelector("#time-signature-button-up"),M=document.querySelector("#time-signature-button-down");g(c.maxBeatsPerMeasure,r,B);f(c.minBeatsPerMeasure,r,M);function A(t){t.stopPropagation();let e=t.target.id==="time-signature-button-up";g(c.maxBeatsPerMeasure,r,B,e),f(c.minBeatsPerMeasure,r,M,!e),r=e?++r:--r,q.textContent=r.toString();let n=new Event("timeSignatureChange");s&&l.dispatchEvent(n);}B.addEventListener("click",A);M.addEventListener("click",A);var s,l=document.querySelector("#metronome-toggle-button"),V=document.querySelector("staff-container");l.addEventListener("click",async()=>{let t=document.querySelector("#metronome-button-play-icon"),e=document.querySelector("#metronome-button-pause-icon");s?(clearInterval(s),s=null,t.setAttribute("class",""),e.setAttribute("class","hidden")):(s=await E(h,r),t.setAttribute("class","hidden"),e.setAttribute("class",""),V.scrollIntoView());});async function N(){s&&(clearInterval(s),s=null,s=await E(h,r),V.scrollIntoView());}l.addEventListener("tempoChange",N);l.addEventListener("timeSignatureChange",N);//# sourceMappingURL=main.js.map
-//# sourceMappingURL=main.js.map
+/* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
+import { startMetronome } from "./metronome.js";
+import { showNoteImg } from "./showNoteImg.js";
+// Start with empty staff
+const epmtyStaffURL = "./static/images/empty-staff.svg";
+showNoteImg(epmtyStaffURL);
+// Toggle button utils
+function toggleDisableButton(disabled, button) {
+    button.disabled = disabled;
+}
+function toggleButtonUp(maxValue, currentValue, button, isIncrement) {
+    const disabled = (isIncrement ?? true) && currentValue >= maxValue - 1;
+    toggleDisableButton(disabled, button);
+}
+function toggleButtonDown(minValue, currentValue, button, isDecrement) {
+    const disabled = (isDecrement ?? true) && currentValue <= minValue + 1;
+    toggleDisableButton(disabled, button);
+}
+/* ======== Tempo ======== */
+const TEMPO_CONFIG = {
+    defaultTempo: 90,
+    minBpm: 1,
+    maxBpm: 360,
+};
+let bpm = TEMPO_CONFIG.defaultTempo;
+const bpmValue = document.querySelector("#tempo-value");
+// Convert BPM to ms
+function bpmToMs(bpm) {
+    return (60 * 1000) / bpm;
+}
+let ms = bpmToMs(bpm);
+const tempoSlider = document.querySelector("#tempo-slider");
+tempoSlider.value = bpm.toString(); // Set default value
+bpmValue.textContent = tempoSlider.value; // Show default value in UI
+function updateTempoSliderValue(newTempoValue) {
+    tempoSlider.value = newTempoValue; // Update slider value
+    bpmValue.textContent = tempoSlider.value; // Update BPM value in UI
+    bpm = parseInt(newTempoValue); // Update BPM value
+    ms = bpmToMs(bpm); // Update ms value
+    // Notify metronome that the tempo has changed
+    const tempoChangeEvent = new Event("tempoChange");
+    // Only dispatch the event if the metronome is playing
+    if (isMetronomePlaying)
+        metronomeToggleButton.dispatchEvent(tempoChangeEvent);
+}
+function handleTempoSliderChange(event) {
+    const newTempoValue = event.target.value;
+    updateTempoSliderValue(newTempoValue);
+}
+// Change BPM based on slider
+tempoSlider.addEventListener("change", handleTempoSliderChange);
+const tempoButtonUp = document.querySelector("#tempo-button-up");
+const tempoButtonDown = document.querySelector("#tempo-button-down");
+// Change the value in the slider on button press
+toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUp);
+toggleButtonDown(TEMPO_CONFIG.minBpm, bpm, tempoButtonDown);
+// Increment or decrement beats per measure via button
+function handleTempoButtonChange(event) {
+    const isIncrement = event.target.id === "tempo-button-up" ||
+        event.target.id === "tempo-button-up-icon";
+    // Enable/disable buttons based on current value + change
+    toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUp, isIncrement);
+    toggleButtonDown(TEMPO_CONFIG.minBpm, bpm, tempoButtonDown, !isIncrement);
+    // Update the value in the slider by dispatching change event
+    const tempoSliderEventType = isIncrement ? "increment" : "decrement";
+    const tempoChangeEvent = new Event(tempoSliderEventType);
+    tempoSlider.dispatchEvent(tempoChangeEvent);
+}
+// Adjust BPM via UI
+tempoButtonUp.addEventListener("click", handleTempoButtonChange);
+tempoButtonDown.addEventListener("click", handleTempoButtonChange);
+function handleTempoSliderButtonChange(event) {
+    event.stopPropagation();
+    const isIncrement = event.type === "increment";
+    // Calculate new value from current value
+    const currentTempoValue = parseInt(tempoSlider.value);
+    // Increment/decrement current value based on button press +/-
+    const newTempoValue = isIncrement
+        ? currentTempoValue + 1
+        : currentTempoValue - 1;
+    updateTempoSliderValue(newTempoValue.toString());
+}
+// Change slider on button click
+tempoSlider.addEventListener("increment", handleTempoSliderButtonChange);
+tempoSlider.addEventListener("decrement", handleTempoSliderButtonChange);
+/* ======== Time Signature ======== */
+const TIME_SIGNATURE_CONFIG = {
+    defaultBeatsPerMeasure: 4,
+    minBeatsPerMeasure: 1,
+    maxBeatsPerMeasure: 4,
+};
+let beatsPerMeasure = TIME_SIGNATURE_CONFIG.defaultBeatsPerMeasure;
+const beatsPerMeasureValue = document.querySelector("#time-signature-value");
+beatsPerMeasureValue.textContent = beatsPerMeasure.toString();
+const timeSignatureButtonUp = document.querySelector("#time-signature-button-up");
+const timeSignatureButtonDown = document.querySelector("#time-signature-button-down");
+// Disable/enable buttons based on config + current values
+toggleButtonUp(TIME_SIGNATURE_CONFIG.maxBeatsPerMeasure, beatsPerMeasure, timeSignatureButtonUp);
+toggleButtonDown(TIME_SIGNATURE_CONFIG.minBeatsPerMeasure, beatsPerMeasure, timeSignatureButtonDown);
+// Increment or decrement beats per measure via button
+function handleTimeSignatureButtonChange(event) {
+    event.stopPropagation();
+    const isIncrement = event.target.id === "time-signature-button-up";
+    // Enable/disable buttons based on current value + change
+    toggleButtonUp(TIME_SIGNATURE_CONFIG.maxBeatsPerMeasure, beatsPerMeasure, timeSignatureButtonUp, isIncrement);
+    toggleButtonDown(TIME_SIGNATURE_CONFIG.minBeatsPerMeasure, beatsPerMeasure, timeSignatureButtonDown, !isIncrement);
+    // Set the new value
+    beatsPerMeasure = isIncrement ? ++beatsPerMeasure : --beatsPerMeasure;
+    // Update value in UI
+    beatsPerMeasureValue.textContent = beatsPerMeasure.toString();
+    // Notify metronome that the time signature has changed
+    const timeSignatureChangeEvent = new Event("timeSignatureChange");
+    // Only dispatch the event if the metronome is playing
+    if (isMetronomePlaying)
+        metronomeToggleButton.dispatchEvent(timeSignatureChangeEvent);
+}
+// Adjust BPM via UI
+timeSignatureButtonUp.addEventListener("click", handleTimeSignatureButtonChange);
+timeSignatureButtonDown.addEventListener("click", handleTimeSignatureButtonChange);
+/* ======== Metronome ======== */
+let isMetronomePlaying;
+const metronomeToggleButton = document.querySelector("#metronome-toggle-button");
+const staffContainer = document.querySelector("#staff-container");
+// Start/stop metronome on button click
+metronomeToggleButton.addEventListener("click", async () => {
+    const metronomePlayButton = document.querySelector("#metronome-button-play-icon");
+    const metronomePauseButton = document.querySelector("#metronome-button-pause-icon");
+    if (isMetronomePlaying) {
+        // Metronome playing
+        clearInterval(isMetronomePlaying);
+        isMetronomePlaying = null;
+        // Change button icon from ⏸️ to ▶️
+        metronomePlayButton.setAttribute("class", "");
+        metronomePauseButton.setAttribute("class", "hidden");
+    }
+    else {
+        //Metronome not playing
+        isMetronomePlaying = await startMetronome(ms, beatsPerMeasure);
+        // Change button icon from ▶️ to ⏸️
+        metronomePlayButton.setAttribute("class", "hidden");
+        metronomePauseButton.setAttribute("class", "");
+        // Scroll to staff
+        staffContainer.scrollIntoView();
+    }
+});
+async function restartMetronome() {
+    if (isMetronomePlaying) {
+        // Stop the metronome
+        clearInterval(isMetronomePlaying);
+        isMetronomePlaying = null;
+        // Restart the metronome with the updated value for beatsPerMeasure
+        isMetronomePlaying = await startMetronome(ms, beatsPerMeasure);
+    }
+}
+// Restart the metronome on tempo change
+metronomeToggleButton.addEventListener("tempoChange", restartMetronome);
+// Restart the metronome on time signature change
+metronomeToggleButton.addEventListener("timeSignatureChange", restartMetronome);
