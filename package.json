@@ -1,12 +1,13 @@
 {
   "name": "metronome-playalong",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "./main.js",
   "homepage": "https://cdomizi.github.io/metronome-playalong/",
   "type": "module",
   "packageManager": "yarn@4.6.0",
   "scripts": {
-    "build": "yarn tsc",
+    "build:cp": "cp -r -t ./dist ./index.html ./css/** ./static/**",
+    "build": "yarn tsc && yarn build:cp",
     "lint:ts": "yarn tsc --noEmit",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0 .",
     "dev": "tsup --watch --env.NODE_ENV development",
