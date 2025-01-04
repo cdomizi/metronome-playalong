@@ -2,8 +2,8 @@ import { changeNote } from "./changeNote.js";
 /* eslint-disable @typescript-eslint/no-floating-promises */
 export async function startMetronome(interval, beatsPerMeasure) {
     // Load the audio files
-    const highSound = await loadAudio("../public/static/audio/metronome-high.mp3");
-    const lowSound = await loadAudio("../public/static/audio/metronome-low.mp3");
+    const highSound = await loadAudio("../static/audio/metronome-high.mp3");
+    const lowSound = await loadAudio("../static/audio/metronome-low.mp3");
     let beatCount = 0;
     // Function to play the sound
     function playBeat() {
