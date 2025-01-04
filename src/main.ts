@@ -204,7 +204,7 @@ const metronomeToggleButton = document.querySelector(
 ) as HTMLButtonElement;
 
 const staffContainer = document.querySelector(
-  "staff-container",
+  "#staff-container",
 ) as HTMLDivElement;
 
 // Start/stop metronome on button click
@@ -243,9 +243,6 @@ async function restartMetronome() {
 
     // Restart the metronome with the updated value for beatsPerMeasure
     isMetronomePlaying = await startMetronome(ms, beatsPerMeasure);
-
-    // Scroll to staff
-    staffContainer.scrollIntoView();
   }
 }
 
