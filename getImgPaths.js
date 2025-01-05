@@ -1,23 +1,22 @@
-async function getImgPaths() {
-    // Get content from the `images folder`
-    const response = await fetch("./static/images/");
-    const body = await response.text();
-    // Parse content as HTML
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(body, "text/html");
-    // SVG files are displayed as anchor elements
-    const links = doc.querySelectorAll("a");
-    if (!links.length) {
-        throw Error("Document does not contain SVG element");
-    }
-    // Filter out non-SVG files and empty staff
-    const svgPaths = Array.from(links)
-        .map((link) => link.href)
-        .filter((link) => link.endsWith(".svg") && !link.toLowerCase().includes("staff"));
-    return svgPaths;
-}
-export async function getRandomSvgPath() {
-    const svgPaths = await getImgPaths();
-    const randomIndex = Math.floor(Math.random() * svgPaths.length);
-    return svgPaths[randomIndex];
+const notes = [
+    "e2",
+    "f2",
+    "g2",
+    "a2",
+    "b2",
+    "c3",
+    "d3",
+    "e3",
+    "f3",
+    "g3",
+    "a3",
+    "b3",
+    "c4",
+];
+export function getRandomSvgPath() {
+    const randomIndex = Math.floor(Math.random() * notes.length);
+    const randomNote = notes[randomIndex];
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    const randomSvgPath = `./static/images/${randomNote}.svg`;
+    return randomSvgPath;
 }
