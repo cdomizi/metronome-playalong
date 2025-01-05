@@ -1,4 +1,10 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn lint:ts && yarn lint
+# Type checking
+yarn lint:ts
+echo "Type checking performed successfully: No errors found."
+
+# Linting
+yarn lint
+echo "Linting performed successfully: No errors found."
