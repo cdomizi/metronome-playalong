@@ -6,8 +6,8 @@ export async function startMetronome(
   beatsPerMeasure: number,
 ) {
   // Load the audio files
-  const highSound = await loadAudio("../static/audio/metronome-high.mp3");
-  const lowSound = await loadAudio("../static/audio/metronome-low.mp3");
+  const highSound = await loadAudio("./static/audio/metronome-high.mp3");
+  const lowSound = await loadAudio("./static/audio/metronome-low.mp3");
 
   let beatCount = 0;
 

@@ -6,7 +6,7 @@
   "type": "module",
   "packageManager": "yarn@4.6.0",
   "scripts": {
-    "build:cp": "cp -r -t ./dist ./index.html ./css/** ./static/**",
+    "build:cp": "cp -r -t ./dist ./index.html ./public/**",
     "build": "yarn build:cp && yarn tsc",
     "lint:ts": "yarn tsc --noEmit",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0 .",

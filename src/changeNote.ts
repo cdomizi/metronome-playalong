@@ -6,9 +6,9 @@ const staffContainer = document.querySelector(
   "#staff-container",
 ) as HTMLElement;
 
-export async function changeNote() {
+export function changeNote() {
   // Get path of random SVG file
-  const randomSvg = await getRandomSvgPath();
+  const randomSvg = getRandomSvgPath();
 
   // Handle error on getting SVG file path
   if (!randomSvg) {
