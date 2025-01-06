@@ -1,35 +1,14 @@
 /* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
 import { showNoteImg } from "./imageUtils.js";
 import { startMetronome } from "./metronome.js";
+import { bpmToMs } from "./metronomeUtils.js";
+import { toggleButtonDown, toggleButtonUp } from "./uiUtils.js";
 
 // Start with empty staff
 const epmtyStaffURL = "./static/images/empty-staff.svg";
 showNoteImg(epmtyStaffURL);
 
-// Toggle button utils
-function toggleDisableButton(disabled: boolean, button: HTMLButtonElement) {
-  button.disabled = disabled;
-}
-function toggleButtonUp(
-  maxValue: number,
-  currentValue: number,
-  button: HTMLButtonElement,
-  isIncrement?: boolean,
-) {
-  const disabled = (isIncrement ?? true) && currentValue >= maxValue - 1;
-  toggleDisableButton(disabled, button);
-}
-function toggleButtonDown(
-  minValue: number,
-  currentValue: number,
-  button: HTMLButtonElement,
-  isDecrement?: boolean,
-) {
-  const disabled = (isDecrement ?? true) && currentValue <= minValue + 1;
-  toggleDisableButton(disabled, button);
-}
-
-/* ======== Tempo ======== */
+/* ======================== Tempo Section ======================== */
 const TEMPO_CONFIG = {
   defaultTempo: 90,
   minBpm: 1,
@@ -39,10 +18,7 @@ let bpm = TEMPO_CONFIG.defaultTempo;
 const bpmValue = document.querySelector("#tempo-value") as HTMLSpanElement;
 
 // Convert BPM to ms
-function bpmToMs(bpm: number) {
-  return (60 * 1000) / bpm;
-}
-let ms = bpmToMs(bpm);
+let interval = bpmToMs(bpm);
 
 const tempoSlider = document.querySelector("#tempo-slider") as HTMLInputElement;
 
@@ -54,12 +30,12 @@ function updateTempoSliderValue(newTempoValue: string) {
   bpmValue.textContent = tempoSlider.value; // Update BPM value in UI
 
   bpm = parseInt(newTempoValue); // Update BPM value
-  ms = bpmToMs(bpm); // Update ms value
+  interval = bpmToMs(bpm); // Update ms value
 
   // Notify metronome that the tempo has changed
   const tempoChangeEvent = new Event("tempoChange");
   // Only dispatch the event if the metronome is playing
-  if (isMetronomePlaying) metronomeToggleButton.dispatchEvent(tempoChangeEvent);
+  if (isMetronomePlaying) metronomeButton.dispatchEvent(tempoChangeEvent);
 }
 
 function handleTempoSliderChange(event: Event) {
@@ -121,7 +97,7 @@ function handleTempoSliderButtonChange(event: Event) {
 tempoSlider.addEventListener("increment", handleTempoSliderButtonChange);
 tempoSlider.addEventListener("decrement", handleTempoSliderButtonChange);
 
-/* ======== Time Signature ======== */
+/* ======================== Time Signature Section ======================== */
 const TIME_SIGNATURE_CONFIG = {
   defaultBeatsPerMeasure: 4,
   minBeatsPerMeasure: 1,
@@ -183,7 +159,7 @@ function handleTimeSignatureButtonChange(event: Event) {
   const timeSignatureChangeEvent = new Event("timeSignatureChange");
   // Only dispatch the event if the metronome is playing
   if (isMetronomePlaying)
-    metronomeToggleButton.dispatchEvent(timeSignatureChangeEvent);
+    metronomeButton.dispatchEvent(timeSignatureChangeEvent);
 }
 
 // Adjust BPM via UI
@@ -196,10 +172,10 @@ timeSignatureButtonDown.addEventListener(
   handleTimeSignatureButtonChange,
 );
 
-/* ======== Metronome ======== */
+/* ======================== Metronome Section ======================== */
 let isMetronomePlaying: number | null;
 
-const metronomeToggleButton = document.querySelector(
+const metronomeButton = document.querySelector(
   "#metronome-toggle-button",
 ) as HTMLButtonElement;
 
@@ -207,8 +183,7 @@ const staffContainer = document.querySelector(
   "#staff-container",
 ) as HTMLDivElement;
 
-// Start/stop metronome on button click
-metronomeToggleButton.addEventListener("click", async () => {
+async function handleMetronomeButtonClick() {
   const metronomePlayButton = document.querySelector(
     "#metronome-button-play-icon",
   ) as SVGElement;
@@ -225,7 +200,7 @@ metronomeToggleButton.addEventListener("click", async () => {
     metronomePauseButton.setAttribute("class", "hidden");
   } else {
     //Metronome not playing
-    isMetronomePlaying = await startMetronome(ms, beatsPerMeasure);
+    isMetronomePlaying = await startMetronome(interval, beatsPerMeasure);
     // Change button icon from ▶️ to ⏸️
     metronomePlayButton.setAttribute("class", "hidden");
     metronomePauseButton.setAttribute("class", "");
@@ -233,7 +208,10 @@ metronomeToggleButton.addEventListener("click", async () => {
     // Scroll to staff
     staffContainer.scrollIntoView();
   }
-});
+}
+
+// Start/stop metronome on button click
+metronomeButton.addEventListener("click", handleMetronomeButtonClick);
 
 async function restartMetronome() {
   if (isMetronomePlaying) {
@@ -242,11 +220,11 @@ async function restartMetronome() {
     isMetronomePlaying = null;
 
     // Restart the metronome with the updated value for beatsPerMeasure
-    isMetronomePlaying = await startMetronome(ms, beatsPerMeasure);
+    isMetronomePlaying = await startMetronome(interval, beatsPerMeasure);
   }
 }
 
 // Restart the metronome on tempo change
-metronomeToggleButton.addEventListener("tempoChange", restartMetronome);
+metronomeButton.addEventListener("tempoChange", restartMetronome);
 // Restart the metronome on time signature change
-metronomeToggleButton.addEventListener("timeSignatureChange", restartMetronome);
+metronomeButton.addEventListener("timeSignatureChange", restartMetronome);

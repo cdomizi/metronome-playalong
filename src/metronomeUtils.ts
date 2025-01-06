@@ -44,3 +44,8 @@ export function loadAudio(audioFilePath: string): Promise<HTMLAudioElement> {
     audio.load(); // Start loading the audio
   });
 }
+
+// Convert BPM to milliseconds
+export function bpmToMs(bpm: number) {
+  return (60 * 1000) / bpm;
+}
