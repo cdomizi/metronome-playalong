@@ -1,9 +1,5 @@
 import { getRandomSvgPath, showNoteImg } from "./imageUtils.js";
-
-// eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
-const staffContainer = document.querySelector(
-  "#staff-container",
-) as HTMLElement;
+import { staffContainerElement } from "./uiUtils.js";
 
 export function changeNote() {
   // Get path of random SVG file
@@ -12,7 +8,7 @@ export function changeNote() {
   // Handle error on getting SVG file path
   if (!randomNoteImgPath) {
     console.error(`Error: Could not get SVG file.`);
-    staffContainer.textContent =
+    staffContainerElement.textContent =
       "An error occurred: Cannot display a new note.";
 
     return;

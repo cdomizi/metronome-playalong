@@ -1,33 +1,45 @@
-/* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
 import { showNoteImg } from "./imageUtils.js";
 import { startMetronome } from "./metronome.js";
 import { bpmToMs } from "./metronomeUtils.js";
-import { toggleButtonDown, toggleButtonUp } from "./uiUtils.js";
+// UI elements
+import {
+  beatsPerMeasureValueElement,
+  bpmValueElement,
+  metronomeButton,
+  metronomePauseButton,
+  metronomePlayButton,
+  staffContainerElement,
+  tempoButtonDownElement,
+  tempoButtonUpElement,
+  tempoSliderElement,
+  timeSignatureButtonDownElement,
+  timeSignatureButtonUpElement,
+  toggleButtonDown,
+  toggleButtonUp,
+} from "./uiUtils.js";
 
-// Start with empty staff
-const epmtyStaffURL = "./static/images/empty-staff.svg";
-showNoteImg(epmtyStaffURL);
+// Initially show empty staff in UI
+const epmtyStaffFilePath = "./static/images/empty-staff.svg";
+showNoteImg(epmtyStaffFilePath);
 
 /* ======================== Tempo Section ======================== */
+
+// Set Tempo config & defaults
 const TEMPO_CONFIG = {
   defaultTempo: 90,
   minBpm: 1,
   maxBpm: 360,
 };
-let bpm = TEMPO_CONFIG.defaultTempo;
-const bpmValue = document.querySelector("#tempo-value") as HTMLSpanElement;
 
-// Convert BPM to ms
-let interval = bpmToMs(bpm);
+let bpm = TEMPO_CONFIG.defaultTempo; // Set default BPM value
+let interval = bpmToMs(bpm); // Convert BPM to ms
 
-const tempoSlider = document.querySelector("#tempo-slider") as HTMLInputElement;
-
-tempoSlider.value = bpm.toString(); // Set default value
-bpmValue.textContent = tempoSlider.value; // Show default value in UI
+tempoSliderElement.value = bpm.toString(); // Set default BPM value on slider
+bpmValueElement.textContent = tempoSliderElement.value; // Show default BPM value in UI
 
 function updateTempoSliderValue(newTempoValue: string) {
-  tempoSlider.value = newTempoValue; // Update slider value
-  bpmValue.textContent = tempoSlider.value; // Update BPM value in UI
+  tempoSliderElement.value = newTempoValue; // Update slider value
+  bpmValueElement.textContent = tempoSliderElement.value; // Update BPM value in UI
 
   bpm = parseInt(newTempoValue); // Update BPM value
   interval = bpmToMs(bpm); // Update ms value
@@ -45,18 +57,11 @@ function handleTempoSliderChange(event: Event) {
 }
 
 // Change BPM based on slider
-tempoSlider.addEventListener("change", handleTempoSliderChange);
-
-const tempoButtonUp = document.querySelector(
-  "#tempo-button-up",
-) as HTMLButtonElement;
-const tempoButtonDown = document.querySelector(
-  "#tempo-button-down",
-) as HTMLButtonElement;
+tempoSliderElement.addEventListener("change", handleTempoSliderChange);
 
 // Change the value in the slider on button press
-toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUp);
-toggleButtonDown(TEMPO_CONFIG.minBpm, bpm, tempoButtonDown);
+toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUpElement);
+toggleButtonDown(TEMPO_CONFIG.minBpm, bpm, tempoButtonDownElement);
 
 // Increment or decrement beats per measure via button
 function handleTempoButtonChange(event: Event) {
@@ -65,18 +70,23 @@ function handleTempoButtonChange(event: Event) {
     (event.target as HTMLButtonElement).id === "tempo-button-up-icon";
 
   // Enable/disable buttons based on current value + change
-  toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUp, isIncrement);
-  toggleButtonDown(TEMPO_CONFIG.minBpm, bpm, tempoButtonDown, !isIncrement);
+  toggleButtonUp(TEMPO_CONFIG.maxBpm, bpm, tempoButtonUpElement, isIncrement);
+  toggleButtonDown(
+    TEMPO_CONFIG.minBpm,
+    bpm,
+    tempoButtonDownElement,
+    !isIncrement,
+  );
 
   // Update the value in the slider by dispatching change event
   const tempoSliderEventType = isIncrement ? "increment" : "decrement";
   const tempoChangeEvent = new Event(tempoSliderEventType);
-  tempoSlider.dispatchEvent(tempoChangeEvent);
+  tempoSliderElement.dispatchEvent(tempoChangeEvent);
 }
 
 // Adjust BPM via UI
-tempoButtonUp.addEventListener("click", handleTempoButtonChange);
-tempoButtonDown.addEventListener("click", handleTempoButtonChange);
+tempoButtonUpElement.addEventListener("click", handleTempoButtonChange);
+tempoButtonDownElement.addEventListener("click", handleTempoButtonChange);
 
 function handleTempoSliderButtonChange(event: Event) {
   event.stopPropagation();
@@ -84,7 +94,7 @@ function handleTempoSliderButtonChange(event: Event) {
   const isIncrement = event.type === "increment";
 
   // Calculate new value from current value
-  const currentTempoValue = parseInt(tempoSlider.value);
+  const currentTempoValue = parseInt(tempoSliderElement.value);
   // Increment/decrement current value based on button press +/-
   const newTempoValue = isIncrement
     ? currentTempoValue + 1
@@ -94,38 +104,32 @@ function handleTempoSliderButtonChange(event: Event) {
 }
 
 // Change slider on button click
-tempoSlider.addEventListener("increment", handleTempoSliderButtonChange);
-tempoSlider.addEventListener("decrement", handleTempoSliderButtonChange);
+tempoSliderElement.addEventListener("increment", handleTempoSliderButtonChange);
+tempoSliderElement.addEventListener("decrement", handleTempoSliderButtonChange);
 
 /* ======================== Time Signature Section ======================== */
+// Set Time Signature config & defaults
 const TIME_SIGNATURE_CONFIG = {
   defaultBeatsPerMeasure: 4,
   minBeatsPerMeasure: 1,
   maxBeatsPerMeasure: 4,
 };
-let beatsPerMeasure = TIME_SIGNATURE_CONFIG.defaultBeatsPerMeasure;
-const beatsPerMeasureValue = document.querySelector(
-  "#time-signature-value",
-) as HTMLSpanElement;
-beatsPerMeasureValue.textContent = beatsPerMeasure.toString();
 
-const timeSignatureButtonUp = document.querySelector(
-  "#time-signature-button-up",
-) as HTMLButtonElement;
-const timeSignatureButtonDown = document.querySelector(
-  "#time-signature-button-down",
-) as HTMLButtonElement;
+// Set default value for beatsPerMeasure
+let beatsPerMeasure = TIME_SIGNATURE_CONFIG.defaultBeatsPerMeasure;
+// Show default value for beatsPerMeasure in UI
+beatsPerMeasureValueElement.textContent = beatsPerMeasure.toString();
 
 // Disable/enable buttons based on config + current values
 toggleButtonUp(
   TIME_SIGNATURE_CONFIG.maxBeatsPerMeasure,
   beatsPerMeasure,
-  timeSignatureButtonUp,
+  timeSignatureButtonUpElement,
 );
 toggleButtonDown(
   TIME_SIGNATURE_CONFIG.minBeatsPerMeasure,
   beatsPerMeasure,
-  timeSignatureButtonDown,
+  timeSignatureButtonDownElement,
 );
 
 // Increment or decrement beats per measure via button
@@ -139,13 +143,13 @@ function handleTimeSignatureButtonChange(event: Event) {
   toggleButtonUp(
     TIME_SIGNATURE_CONFIG.maxBeatsPerMeasure,
     beatsPerMeasure,
-    timeSignatureButtonUp,
+    timeSignatureButtonUpElement,
     isIncrement,
   );
   toggleButtonDown(
     TIME_SIGNATURE_CONFIG.minBeatsPerMeasure,
     beatsPerMeasure,
-    timeSignatureButtonDown,
+    timeSignatureButtonDownElement,
     !isIncrement,
   );
 
@@ -153,7 +157,7 @@ function handleTimeSignatureButtonChange(event: Event) {
   beatsPerMeasure = isIncrement ? ++beatsPerMeasure : --beatsPerMeasure;
 
   // Update value in UI
-  beatsPerMeasureValue.textContent = beatsPerMeasure.toString();
+  beatsPerMeasureValueElement.textContent = beatsPerMeasure.toString();
 
   // Notify metronome that the time signature has changed
   const timeSignatureChangeEvent = new Event("timeSignatureChange");
@@ -163,11 +167,11 @@ function handleTimeSignatureButtonChange(event: Event) {
 }
 
 // Adjust BPM via UI
-timeSignatureButtonUp.addEventListener(
+timeSignatureButtonUpElement.addEventListener(
   "click",
   handleTimeSignatureButtonChange,
 );
-timeSignatureButtonDown.addEventListener(
+timeSignatureButtonDownElement.addEventListener(
   "click",
   handleTimeSignatureButtonChange,
 );
@@ -175,22 +179,7 @@ timeSignatureButtonDown.addEventListener(
 /* ======================== Metronome Section ======================== */
 let isMetronomePlaying: number | null;
 
-const metronomeButton = document.querySelector(
-  "#metronome-toggle-button",
-) as HTMLButtonElement;
-
-const staffContainer = document.querySelector(
-  "#staff-container",
-) as HTMLDivElement;
-
 async function handleMetronomeButtonClick() {
-  const metronomePlayButton = document.querySelector(
-    "#metronome-button-play-icon",
-  ) as SVGElement;
-  const metronomePauseButton = document.querySelector(
-    "#metronome-button-pause-icon",
-  ) as SVGElement;
-
   if (isMetronomePlaying) {
     // Metronome playing
     clearInterval(isMetronomePlaying);
@@ -206,7 +195,7 @@ async function handleMetronomeButtonClick() {
     metronomePauseButton.setAttribute("class", "");
 
     // Scroll to staff
-    staffContainer.scrollIntoView();
+    staffContainerElement.scrollIntoView();
   }
 }
 

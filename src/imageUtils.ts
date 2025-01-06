@@ -1,3 +1,5 @@
+import { noteImgElement } from "./uiUtils.js";
+
 // List of available notes
 const notesList = [
   "e2",
@@ -25,9 +27,6 @@ export function getRandomSvgPath() {
 
   return randomSvgPath;
 }
-
-// eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
-const noteImgElement = document.querySelector("img#note") as HTMLImageElement;
 
 // Display SVG image from file path
 export function showNoteImg(imgFilePath: string) {
