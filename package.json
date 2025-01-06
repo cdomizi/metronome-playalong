@@ -6,12 +6,10 @@
   "type": "module",
   "packageManager": "yarn@4.6.0",
   "scripts": {
-    "build:cp": "cp -r -t ./dist ./index.html 404.html ./public/**",
-    "build": "yarn build:cp && yarn tsc",
-    "lint:ts": "yarn tsc --noEmit",
+    "typecheck": "yarn tsc --noEmit",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0 .",
+    "build": "tsup --env.NODE_ENV production",
     "dev": "tsup --watch --env.NODE_ENV development",
-    "start": "tsup --env.NODE_ENV production",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d dist"
   },

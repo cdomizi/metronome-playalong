@@ -5,8 +5,8 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
+  publicDir: true,
   format: "esm",
   ignoreWatch: "./yarn/**/*",
   minify: true,
-  treeshake: true,
 });

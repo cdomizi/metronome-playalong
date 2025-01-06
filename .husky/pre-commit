@@ -2,7 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # Type checking
-yarn lint:ts
+yarn typecheck
 echo "Type checking performed successfully: No errors found."
 
 # Linting
