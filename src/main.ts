@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
+import { showNoteImg } from "./imageUtils.js";
 import { startMetronome } from "./metronome.js";
-import { showNoteImg } from "./showNoteImg.js";
 
 // Start with empty staff
 const epmtyStaffURL = "./static/images/empty-staff.svg";

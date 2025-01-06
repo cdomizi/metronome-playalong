@@ -1,6 +1,6 @@
-import { changeNote } from "./changeNote.js";
-
 /* eslint-disable @typescript-eslint/no-floating-promises */
+import { changeNote, loadAudio } from "./metronomeUtils.js";
+
 export async function startMetronome(
   interval: number,
   beatsPerMeasure: number,
@@ -32,28 +32,4 @@ export async function startMetronome(
   }
 
   return setInterval(playBeat, interval);
-}
-
-// Load audio file
-function loadAudio(url: string): Promise<HTMLAudioElement> {
-  return new Promise((resolve, reject) => {
-    const audio = new Audio(url);
-
-    audio.addEventListener(
-      "canplaythrough",
-      () => {
-        resolve(audio);
-      },
-      false,
-    );
-    audio.addEventListener(
-      "error",
-      () => {
-        reject(new Error("Failed to load audio: " + url));
-      },
-      false,
-    );
-
-    audio.load(); // Start loading the audio
-  });
 }
