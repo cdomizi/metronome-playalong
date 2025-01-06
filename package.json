@@ -8,7 +8,7 @@
   "scripts": {
     "typecheck": "yarn tsc --noEmit",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0 .",
-    "build": "tsup --env.NODE_ENV production",
+    "build": "tsup --clean --env.NODE_ENV production",
     "dev": "tsup --watch --env.NODE_ENV development",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d dist"
